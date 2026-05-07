@@ -1,0 +1,27 @@
+<div id="task-{{ task.id }}" class="bg-white p-4 rounded shadow border flex justify-between items-center">
+    <div>
+        <h3 class="font-bold">{{ task.title }}</h3>
+        <p class="text-xs text-gray-500">Due: {{ task.due_date }} | Status: 
+            <span class="font-semibold uppercase text-blue-600">{{ task.status }}</span>
+        </p>
+    </div>
+    
+    <div class="flex space-x-2">
+        <!-- HTMX Update Status -->
+        <form hx-post="{% url 'update-task' task.id %}" hx-target="#task-{{ task.id }}" hx-swap="outerHTML">
+            <select name="status" onchange="this.form.dispatchEvent(new Event('submit'))" class="text-sm border rounded p-1">
+                <option value="todo" {% if task.status == 'todo' %}selected{% endif %}>Todo</option>
+                <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                <option value="done" {% if task.status == 'done' %}selected{% endif %}>Done</option>
+            </select>
+        </form>
+
+        {% if user.role == 'admin' %}
+        <button hx-delete="{% url 'delete-task' task.id %}" 
+                hx-target="#task-{{ task.id }}" 
+                hx-swap="outerHTML"
+                hx-confirm="Delete this task?"
+                class="text-red-500 text-sm font-bold">✕</button>
+        {% endif %}
+    </div>
+</div>

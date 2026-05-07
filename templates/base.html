@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zira</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTMX for dynamic updates -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-50 min-h-screen" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    
+    <nav class="bg-blue-600 p-4 text-white shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Link to dashboard if logged in, otherwise home -->
+            <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}/{% endif %}" class="text-xl font-bold tracking-tight">
+                Zira
+            </a>
+            
+            <div class="flex items-center">
+                {% if user.is_authenticated %}
+                    <span class="mr-4 text-sm opacity-90">
+                        Hello, <span class="font-semibold">{{ user.username }}</span> 
+                        <span class="bg-blue-800 px-2 py-0.5 rounded-full text-xs ml-1 uppercase">{{ user.role }}</span>
+                    </span>
+                    <form action="{% url 'logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm font-bold transition duration-200">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <!-- Show this if the user is a guest -->
+                    <a href="{% url 'login' %}" class="text-sm font-semibold hover:text-blue-200 mr-4">Login</a>
+                    <a href="{% url 'register' %}" class="bg-white text-blue-600 px-4 py-1.5 rounded text-sm font-bold shadow hover:bg-blue-50">
+                        Sign Up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="container mx-auto mt-8 px-4 pb-12">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Simple Footer for professional touch -->
+    <footer class="text-center py-8 text-gray-400 text-xs">
+        &copy; 2026 Team Kushagr &bull;
+    </footer>
+
+</body>
+</html>

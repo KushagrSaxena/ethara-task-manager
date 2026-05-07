@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+    {% if is_admin %}
+    <div class="space-x-2">
+        <a href="{% url 'create-project' %}" class="bg-green-500 text-white px-4 py-2 rounded font-medium">+ Project</a>
+        <a href="{% url 'create-task' %}" class="bg-blue-500 text-white px-4 py-2 rounded font-medium">+ Task</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="grid grid-cols-1 {% if is_admin %}lg:grid-cols-3{% else %}lg:grid-cols-2{% endif %} gap-6">
+    
+    <div>
+        <h2 class="text-xl font-semibold mb-4 text-blue-700">Projects</h2>
+        {% for project in projects %}
+            <div class="bg-white p-4 rounded shadow mb-3 border-l-4 border-blue-600">
+                <h3 class="font-bold">{{ project.name }}</h3>
+                <p class="text-xs text-gray-500">By: {{ project.created_by.username }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <h2 class="text-xl font-semibold mb-4 text-green-700">My Tasks</h2>
+        <div class="space-y-4">
+            {% for task in my_tasks %}
+                {% include 'tasks/partials/task_row.html' %}
+            {% empty %}
+                <p class="text-gray-500 italic">No personal tasks assigned.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if is_admin %}
+    <div>
+        <h2 class="text-xl font-semibold mb-4 text-purple-700">Employee Tasks</h2>
+        <div class="space-y-4">
+            {% for task in employee_tasks %}
+                <div class="bg-purple-50 p-1 rounded-lg">
+                    <p class="text-[10px] font-bold text-purple-800 ml-2 uppercase">Assigned to: {{ task.assigned_to.username }}</p>
+                    {% include 'tasks/partials/task_row.html' %}
+                </div>
+            {% empty %}
+                <p class="text-gray-500 italic">No employee tasks found.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

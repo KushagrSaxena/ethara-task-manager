@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">
+        {% if 'project' in request.path %}Create New Project{% else %}Create New Task{% endif %}
+    </h2>
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <div class="pt-4 flex justify-between items-center">
+            <a href="{% url 'dashboard' %}" class="text-gray-600 hover:underline text-sm">Cancel</a>
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-bold">
+                Save Details
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
